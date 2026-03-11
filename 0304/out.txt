@@ -1,0 +1,4 @@
+bravo 45
+delta 0
+golf 78
+juliet 15
