@@ -24,7 +24,7 @@ void reverse_print(int arr2[], int count) {//역순으로 출력하는 함수
     if (count > 0) {
         printf("%d ", arr2[count - 1]);
         count--;
-        reverse_print(arr2, count);//재귀함수n
+        reverse_print(arr2, count);//재귀함수
     }
 
 }
