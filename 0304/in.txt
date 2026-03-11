@@ -1,0 +1,11 @@
+10
+alpha 120
+bravo 45
+charlie 300
+delta 0
+echo 560
+foxtrot 215
+golf 78
+hotel 600
+india 340
+juliet 15
