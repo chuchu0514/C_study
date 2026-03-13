@@ -50,6 +50,9 @@ char names[] = {"kim","lee"}; 이건 오류남
 
 
 
+포인터는 타입맞추기 싸움이다 
+&은 *이 하나 붙는 걸 꼭 기억 
+*p 는 int형 근데 이게 별이 떼지면 p 이건 int *형임
 
 
  -이중포인터
@@ -92,25 +95,24 @@ int main()
 코드
 void change(int *p)//얜 상자를 받은 거임 
 {
-    int b = 20;
-    p = &b; //상자의 값을 직접 바꿈 
+    *p =20
 }
-
 main
 
 int a = 10;
 int *p = &a;
 
 change(p);
-즉 이러면 안 바뀐다는 뜻
+이러면 a는 20
+*p 20하면 p가 가르키고 있는 주소인a는 유지되고 그 주소에다 값만 20으로 바뀐 것 //즉 일중포인터는 포인터의 "값"을 변경하기위해서  이중 포인터는 포인터가 가르키고 있는 "주소"를 변경하기위함 
 --------------------------------------------
 
 TIP 포인터는 상자로 생각하라
 상자의 주소를 내놔 
-void change(int **p)//쉽게 생각해 포인터 변수의 주소를 가지고 온다 *(*p)이런 느낌으로다가 즉 상자의 주소를 받았음 
+void change(int **pp)// pp->p->a
 {
     int b = 20;
-    *p = &b; //*p는 main의 p라고 생각하면 됨 **p가 포인터 변수의 주소니 *p가 main에서 p랑 같은말//상자의 주소에서 *을 떼서 상자의 내용물을 바꿔야함
+    *pp = &b; //우린 p가 가르키고 있는 주소를 변경하고 싶은 거니까 *pp (p에접근하기위함) 왜 &을 썼냐 pp는 int **, *p는 int *이니 타입명을 맞추기위해 int *인 &b 
 }
 
 main
@@ -123,6 +125,44 @@ change(&p);
 
 요약
 함수로 데리고 와서 main에 있는 변수의 값을 바꾸려면 그 친구의 주소를 무조건 가지고 와야함
+별과 타입을 생각하라 밑을보셈 
+타입을 맞추는 게 진짜진짜진짜진짜 중요오오오오오오
+
+//이건 삼중포인터 
+#include <stdio.h>
+
+void changeDoublePointer(int ***ppp) { ppp ──► pp ──► p ──► a
+    static int b = 20;               int***   int**  int*   int 
+    static int *newp = &b;   // 새로운 포인터
+    static int **newpp = &newp; // 새로운 이중포인터
+
+    *ppp = newpp;   // pp 자체를 newpp로 변경 //*ppp의 의미는 pp겠지 타입은 int**그래서 저 위의 타입을 맞춰준것 newpp도 별을 안 붙혔으니 타입 int**
+    즉! *ppp = &newp; 와 같은 말이다 
+}
+
+int main() {
+    int a = 10;
+
+    int *p = &a;
+    int **pp = &p; //참고로 선언을 할 땐 int **형인거임 선언하고 나서 **pp 쓰면 그냥 int형 pp이렇게 써야 **int형임 pp의 타입 = int **이라고 선언순간에 컴파일러가 처리함 
+
+    printf("before: %d\n", **pp);
+
+    changeDoublePointer(&pp);  // 삼중포인터 전달
+
+    printf("after: %d\n", **pp);
+
+    return 0;
+}
+
+pp p의 주소 즉 pp = &p
+*pp pp가 가리키는 값 즉 *pp = p , 출력은 a의 주소
+**pp는   pp → p → a 즉 a의 값 
+
+
+
+
+
 
 
 
