@@ -131,7 +131,9 @@ change(&p);
 //이건 삼중포인터 
 #include <stdio.h>
 
-void changeDoublePointer(int ***ppp) { ppp ──► pp ──► p ──► a
+/삼중 포인터를 왜 쓰냐 이중포인터의 값을 변경하기 위해서인데.. 이걸 함수로 변경을 하려면 이제 값을 복사하는 게 아니고 주소를 불러와야 하므로
+이중포인터의 주소를 불러올 수 있는 삼중포인터를 쓰는 것 
+void changeDoublePointer(int ***ppp) { ppp ──► pp ──► p ──► a  (ppp는 삼중포인터가 맞다 저기서 )
     static int b = 20;               int***   int**  int*   int 
     static int *newp = &b;   // 새로운 포인터
     static int **newpp = &newp; // 새로운 이중포인터
