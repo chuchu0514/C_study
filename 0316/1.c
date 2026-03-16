@@ -15,7 +15,7 @@ int main(){
     printf("\n");
     int *** arr;
 
-    arr = (int***)malloc(sizeof(int**) * X);
+    arr = (int***)malloc(sizeof(int**) * X); //동적할당
 
     for(int i = 0; i < X; i++){
         arr[i] = (int**)malloc(sizeof(int*) * Y);
@@ -29,7 +29,7 @@ int main(){
     for(int i = 0; i < X; i++){
         for(int j = 0; j < Y; j++){
             for(int k = 0; k < Z; k++){
-                arr[i][j][k] = i + j + k;
+                arr[i][j][k] = i + j + k; //값 초기화 
             }
         }
     }
