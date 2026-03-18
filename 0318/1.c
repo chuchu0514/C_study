@@ -152,7 +152,7 @@ int main(){
 void padd(int startA, int finishA, int startB, 
     int finishB, int *startD, int *finishD){
 
-    float coefficient;
+    int coefficient;
     *startD = avail; 
 
     while (startA <= finishA && startB<= finishB)
@@ -161,24 +161,24 @@ void padd(int startA, int finishA, int startB,
     terms[startB].expon)){
 
     case -1: /* a expon < b expon */
-    attach(terms[startB].coef, 
-    terms[startB].expon); 
-    startB++;
-    break;
+        attach(terms[startB].coef, 
+        terms[startB].expon); 
+        startB++;
+        break;
 
     case 0: /* equal exponents */
-    coefficient = terms[startA].coef + 
-    terms[startB].coef;
-    if(coefficient)
-    attach(coefficient, terms[startA].expon);
-    startA++;
-    startB++;
-    break;
+        coefficient = terms[startA].coef + 
+        terms[startB].coef;
+        if(coefficient)
+        attach(coefficient, terms[startA].expon);
+        startA++;
+        startB++;
+        break;
 
     case 1: /* a expon > b expon */
-    attach(terms[startA].coef, 
-    terms[startA].expon);
-    startA++;
+        attach(terms[startA].coef, 
+        terms[startA].expon);
+        startA++;
     }
 
     /* add in remaining terms of A(x) */
@@ -206,7 +206,9 @@ int COMPARE(int a, int b){
 
 void print_poly(int start, int finish){
     for (int i = start; i <= finish; i++){
+        if (terms[i].coef != 0){
         printf("%d %d ", terms[i].coef, terms[i].expon);
+        }
     }
     printf("\n\n");
 }
