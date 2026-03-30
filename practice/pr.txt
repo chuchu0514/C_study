@@ -1,0 +1,95 @@
+#include <stdio.h>
+#include <ctype.h>  // isalpha 사용
+
+#define MAX 100
+
+// ===== 스택 =====
+char stack[MAX];
+int top = -1;
+
+void push(char x) {
+    // TODO
+}
+
+char pop() {
+    // TODO
+}
+
+char peek() {
+    // TODO
+}
+
+int isEmpty() {
+    // TODO
+}
+
+// ===== 우선순위 =====
+int precedence(char op) {
+    // TODO
+}
+
+// ===== 변환 함수 =====
+void infix_to_postfix(char infix[], char postfix[]) {
+
+    int i, j = 0;
+    char c;
+
+    for (i = 0; infix[i] != '\0'; i++) {
+
+        c = infix[i];
+
+        // TODO: 공백 무시
+
+        // 1. 피연산자
+        if (/* TODO */) {
+
+            // postfix에 추가
+
+        }
+
+        // 2. '('
+        else if (/* TODO */) {
+
+            // push
+
+        }
+
+        // 3. ')'
+        else if (/* TODO */) {
+
+            // '(' 만날 때까지 pop → postfix
+            // '(' 제거
+
+        }
+
+        // 4. 연산자
+        else {
+
+            // while 조건 (우선순위 비교)
+            // pop → postfix
+
+            // 현재 연산자 push
+
+        }
+    }
+
+    // TODO: 스택 비우기
+
+    postfix[j] = '\0'; // 문자열 끝
+}
+
+// ===== main =====
+int main() {
+
+    char infix[MAX];
+    char postfix[MAX];
+
+    printf("중위식 입력: ");
+    scanf("%s", infix);
+
+    infix_to_postfix(infix, postfix);
+
+    printf("후위식: %s\n", postfix);
+
+    return 0;
+}
