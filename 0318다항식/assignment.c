@@ -20,6 +20,8 @@ void padd(int startA, int finishA, int startB,
 void attach(int coef, int expon);//구조체에 저장
 int COMPARE(int a, int b);//expon 비교 
 void print_poly(int start, int finish);//출력함수
+void pmult(int startA, int finishA, int startB, 
+    int finishB, int *startD, int *finishD);
 
 int main(){
     
@@ -212,3 +214,37 @@ void print_poly(int start, int finish){
     }
     printf("\n\n");
 }
+
+void pmult(int startA, int finishA, int startB, 
+    int finishB, int *startD, int *finishD){
+
+        int coef;
+        int expon;
+        *startD = avail; 
+
+        for(int i = startA; i <= finishA; i++){
+            for(int j = startB; j <= finishB; j++){ //이중 반복문으로 두 다항식의 지수와 계수를 곱함 
+                coef = terms[i].coef * terms[j].coef;
+                expon = terms[i].expon + terms[j].expon;
+
+                if (coef != 0) {//입력받는 계수가 0일 수도 있으니..
+                    int found = 0;
+
+                //terms의 D범위 내에서 같은 지수가 있는지 확인
+                    for (int k = *startD; k < avail; k++) {
+                        if (terms[k].expon == expon) {
+                            terms[k].coef += coef; // 같은 지수면 더함
+                            found = 1;
+                            break;
+                        }
+                    }
+
+                if (!found) {
+                    attach(coef, expon); // 없으면 새로 추가
+                }
+            }
+        }
+
+        sort(); //내림차순 정렬 알고리즘 
+        *finishD = avail -1; 
+    }
