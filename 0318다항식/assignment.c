@@ -245,6 +245,6 @@ void pmult(int startA, int finishA, int startB,
             }
         }
 
-        sort(); //내림차순 정렬 알고리즘 
+        //sort(); //내림차순 정렬 알고리즘 
         *finishD = avail -1; 
     }
