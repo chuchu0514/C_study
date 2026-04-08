@@ -20,7 +20,7 @@ int main(){
 
         int cfront = 0, crear = 0;//원형큐의 front와 rear
         int front = 0, rear = -1;//linear큐의 front와 rear
-        while(c != 'q'){//q일떄 그만 
+        while(c != 'q'){//q일때 그만 
             fscanf(fp, " %c", &c);
             if(c == 'a'){ //add의 경우
                 fscanf(fp, "%d", &num);

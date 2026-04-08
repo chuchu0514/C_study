@@ -8,8 +8,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": true,
-      "cwd": "c:/coding/C_/0325maze_solve",
-      "program": "c:/coding/C_/0325maze_solve/build/Debug/outDebug",
+      "cwd": "c:/coding/C_/0406LinkedList",
+      "program": "c:/coding/C_/0406LinkedList/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [
