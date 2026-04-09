@@ -1,0 +1,35 @@
+char배열은
+strcpy를 써야함
+ex) char name[20]; 
+strcpy(name,"kim");
+참고로
+<string.h>필요함
+
+int binary(int num){
+    if(num > 0){
+        binary(num / 2);
+        printf("%d", num%2);
+    }
+}
+
+재귀
+
+char   → 1바이트
+int    → 4바이트
+float  → 4바이트
+double → 8바이트
+포인터  → 4바이트 (32비트 기준)
+
+sfunc1은 공간복잡도를 물어보는거다 
+
+S(P) = c + Sp(n)
+
+c 고정공간
+spn 가변공간
+
+count table의 steps은 드는비용임
+선언은 0이고 대부분 1
+
+freq잴때 for문 조심 조건 둘러보는 것도 하나로 침
+그래서
+for(int i = 0; i < n; i++) 하면 freq는 n+!
