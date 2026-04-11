@@ -33,3 +33,49 @@ count table의 steps은 드는비용임
 freq잴때 for문 조심 조건 둘러보는 것도 하나로 침
 그래서
 for(int i = 0; i < n; i++) 하면 freq는 n+!
+
+calloc는 개수를 
+
+// malloc: 4바이트짜리 3개 = 12바이트 한번에
+malloc(3 * sizeof(int))
+
+// calloc: 4바이트짜리를 3개
+calloc(3, sizeof(int))
+
+
+다항식
+avail만 잘 활용
+
+
+전치
+row terms[](구조체 아니고 그냥 int배열임) ->a.col의 수를 저장해야함 해당 열에 몇 개가 있는지 다 0으로 초기화하자 
+start_pos[i] = start_pos[i-1] + row terms[i-1]
+그리고 start_pos[0] = 1임   0엔 meta data있으니까
+
+array doubling
+
+void push(element item) {
+    // 꽉 찼으면 doubling
+    if (top >= capacity - 1) {
+        capacity *= 2;
+        stack = (element*)realloc(stack, capacity * sizeof(element));
+    }
+    stack[++top] = item;
+}
+
+ex)
+push 1번 → capacity 1→2 doubling → 1개 copy
+push 2번 → capacity 2→4 doubling → 2개 copy
+push 3번 → 여유있음
+push 4번 → capacity 4→8 doubling → 4개 copy
+push 5번 → 여유있음
+push 6번 → 여유있음
+push 7번 → 여유있음
+push 8번 → 여유있음
+
+push가 N번일 때 doubling 횟수 = log₂N
+push 17이면 doubling횟수 5 소숫점 있으면 무조건 올림 
+doubling이 k번이면 total copy 횟수는 {2(k승) - 1} ->copy에 대한 시간복잡도는 그래서 O(2(k승)
+근데 push가 n번일 때 dougling은 log₂N 번이니까 k = log₂N  즉 O(N)
+
+시간복잡도는 O(N)
