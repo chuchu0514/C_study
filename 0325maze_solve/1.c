@@ -111,12 +111,11 @@ int main(){
             if (x == final_x + 1 && y == final_y + 1) {// 도착점 체크
                 found = 1;//찾았음 
                 path[x][y] = 1;
-
             
-            for (int i = 0; i <= top; i++) {
-                path[stack[i].row][stack[i].col] = 1; //최종경로 복사 
-            }                
-                break;
+                for (int i = 0; i <= top; i++) {
+                    path[stack[i].row][stack[i].col] = 1; //최종경로 복사 
+                }                
+                    break;
             }
 
             while (dir < 8) {
