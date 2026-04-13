@@ -32,12 +32,14 @@ char peek(){
         return '\0';
     }    
 }
+
 int precedence(char op);
 void infix_to_postfix(char infix[], char postfix[]);
+//연산자
 int is_operator(char c){
     return c=='+' || c=='-' || c=='*' || c=='/' || c=='%';
 }
-
+//피연산자
 int is_operand(char c){
     return c >= '0' && c <= '9';
 }
@@ -55,6 +57,7 @@ int main() {
     for(int i = 0; i < num ; i++){
         postfix[i] = malloc(sizeof(char)*MAX);
     }
+
     for(int i = 0; i < num ; i++){ //infix입력받기
         fscanf(fp, "%s", infix[i]);
     }
@@ -75,6 +78,8 @@ int main() {
 
     return 0;
 }
+
+
 int precedence(char op){
     if(op == '+' || op == '-') return 1;
     if(op == '*' || op == '/' || op == '%') return 2;
@@ -87,7 +92,7 @@ void infix_to_postfix(char infix[], char postfix[]) {
     char c;
     char prev = '\0';
 
-    for (i = 0; infix[i] != '\0'; i++) {//\0문자가 나올때까지 =문자열 끝까지
+    for (i = 0; infix[i] != '\0'; i++) {//\0문자가 나올 때까지 = 문자열 끝까지
 
         c = infix[i];
 
