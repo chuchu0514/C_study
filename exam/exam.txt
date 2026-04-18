@@ -1,25 +1,39 @@
+1. 시간 복잡도: "최악의 상황에서 반복문이 몇 번 도나?"시간 복잡도는 실제 시간이 아니라 연산 횟수입니다. 
+코드에서 가장 많이 실행되는 부분(보통 반복문 안쪽)만 찾으세요.상수 시간 $O(1)$: 반복문이 없거나, 
+데이터 개수와 상관없이 정해진 횟수만 돌 때.선형 시간 $O(n)$: 데이터 $n$개만큼 정직하게 반복문이 돌 때. 
+(방금 본 sum 함수)이차 시간 $O(n^2)$: 중첩 반복문(for문 안에 for문)이 돌 때.로그 시간 $O(\log n)$: 
+반복할 때마다 처리해야 할 양이 절반씩 팍팍 줄어들 때 (예: 이진 탐색).팁: $n$이 1억(10^8)번 정도 돌면 보통 1초 정도 걸린다고 생각하고 문제를 풀면 감이 빨리 옵니다.
+2. 공간 복잡도: "변수와 스택의 개수를 세라"공간 복잡도는 프로그램이 실행되면서 추가로 사용하는 메모리 양입니다.반복문: 변수 몇 개(i, sum)만 새로 만드니까 데이터가 
+100만 개여도 공간은 $O(1)$입니다.재귀함수: 아까 본 코드처럼 함수가 호출될 때마다 스택 프레임이 쌓입니다. $n$번 호출되면 메모리에 $n$개의 층이 쌓이므로 $O(n)$이 됩니다.
+배열 생성: malloc이나 new로 $n$ 크기의 배열을 만들면 당연히 $O(n)$입니다
+
+
+
+
 char배열은
 strcpy를 써야함
 ex) char name[20]; 
 strcpy(name,"kim");
 참고로
 <string.h>필요함
+//study.txt에 자세한 정리  
+
+재귀 이진수 구하기 
 
 int binary(int num){
     if(num > 0){
         binary(num / 2);
         printf("%d", num%2);
     }
-}
+}이진수는 결국 2의 n승 * (0또는 1) + ......+ 2의 0승 * (0또는 1) 이라는 걸 알면 2로 나눴을 때 나머지는 2의 0승부분인걸 알 수 있음
 
-재귀
 
 char   → 1바이트
 int    → 4바이트
 float  → 4바이트
 double → 8바이트
 포인터  → 4바이트 (32비트 기준)
-
+-->어차피 시험에서 물어보면 알려줌 
 sfunc1은 공간복잡도를 물어보는거다 
 
 S(P) = c + Sp(n)
@@ -28,7 +42,8 @@ c 고정공간
 spn 가변공간
 
 count table의 steps은 드는비용임
-선언은 0이고 대부분 1
+선언은 0이고 대입은 1
+
 
 freq잴때 for문 조심 조건 둘러보는 것도 하나로 침
 그래서
@@ -42,6 +57,8 @@ malloc(3 * sizeof(int))
 // calloc: 4바이트짜리를 3개
 calloc(3, sizeof(int))
 
+realloc경우 1: 뒤에 여유공간 있음 → 그냥 확장 (주소 같음)
+경우 2: 뒤가 막혀있음 → 새 위치 할당 후 복사 (주소 다를 수 있음)
 
 다항식
 avail만 잘 활용
@@ -52,7 +69,10 @@ row terms[](구조체 아니고 그냥 int배열임) ->a.col의 수를 저장해
 start_pos[i] = start_pos[i-1] + row terms[i-1]
 그리고 start_pos[0] = 1임   0엔 meta data있으니까
 
-array doubling
+array doubling //모두 더블링과의 관계를 나타낼 수 있음
+
+더블링이 k번이면 copy는 2의 k승 -1번
+더블링이 log2 k번이면 push는 k번 
 
 void push(element item) {
     // 꽉 찼으면 doubling
@@ -64,14 +84,14 @@ void push(element item) {
 }
 
 ex)
-push 1번 → capacity 1→2 doubling → 1개 copy
-push 2번 → capacity 2→4 doubling → 2개 copy
+push 1번 → 여유있음 (capacity=1, top=-1→0)
+push 2번 → capacity 1→2 doubling → 1개 copy
 push 3번 → 여유있음
-push 4번 → capacity 4→8 doubling → 4개 copy
+push 4번 → capacity 2→4 doubling → 2개 copy
 push 5번 → 여유있음
 push 6번 → 여유있음
 push 7번 → 여유있음
-push 8번 → 여유있음
+push 8번 → capacity 4→8 doubling → 4개 copy
 
 push가 N번일 때 doubling 횟수 = log₂N
 push 17이면 doubling횟수 5 소숫점 있으면 무조건 올림 
@@ -135,3 +155,37 @@ front랑 rear 둘 다 빈 슬롯을 가리켜.
 처음엔 같은 위치(0)에서 시작
 add하면 crear = (crear+1) % size 후 저장
 비어있는 조건: cfront == crear 
+
+
+원형연결리스트는
+last를 쓴다
+그럼 last의 next가 head
+cerase확실히 외우기
+
+다항식도 
+rear avail전부 자기 자리를 아는 것 
+
+항상 강조하는 건데
+
+인자로 노드받은 걸 다 써먹고 써먹은 후에
+노드를 변경해야함 
+
+더블연결리스트는
+node의 오른쪽에 삽입한다
+header가 양쪽에 있다고 생각  왼쪽 오른쪽
+
+동치
+어렵게 생각 ㄴ
+일단 최초의 seq다 출력
+
+출력하면서 원형연결리스트 avail마냥
+top에다가다음 순번 seq를 저장
+그니까
+
+seq0에  11 4 이렇게 들어있으면
+
+11 출력 (top 11) 4출력  (top 4 11)
+이렇게
+top이 안 비어있으면
+top4 pop하고
+seq4 ㄱㄱ
