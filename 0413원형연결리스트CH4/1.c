@@ -13,7 +13,6 @@ Node *get_node();
 void ret_node(Node *node);
 void cerase(Node **last);
 void insert(Node ** last, int data);
-void delete(Node ** last);
 void print_linkedlist(Node * last);
 
 int main(){

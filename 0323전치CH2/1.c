@@ -24,7 +24,7 @@ int main() {
     fscanf(fp, "%d %d %d", &num_rows, &num_cols, &num_terms);
 
     term *a = (term*)malloc(sizeof(term) * (num_terms + 1)); //sparse matrix의 행은 num_terms + 1 만큼 동적할당
-    term *b = (term*)malloc(sizeof(term) * (num_terms + 1)); //전치 받을 구조체 ㄴ
+    term *b = (term*)malloc(sizeof(term) * (num_terms + 1)); //전치 받을 구조체 
 
     a[0].row = num_rows;
     a[0].col = num_cols;

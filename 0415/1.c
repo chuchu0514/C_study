@@ -1,2 +1,0 @@
-//2023024050 추진성
-#define _CRT_SECURE_NO_WARNINGS
