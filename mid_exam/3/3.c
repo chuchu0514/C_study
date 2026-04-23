@@ -2,9 +2,10 @@
 #define MAX_SIZE 20
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 char stack[MAX_SIZE];
-top = -1;
+int top = -1;
 
 void push(int item) {
 	stack[++top] = item;

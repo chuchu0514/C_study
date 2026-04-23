@@ -15,7 +15,7 @@ int main() {
 	FILE* fp = fopen("in2.txt", "r");
 	if (fp == NULL) {
 		printf("error");
-		return;
+		return 0;
 	}
 	node* head = NULL;
 	int size = 0;
@@ -32,7 +32,7 @@ int main() {
 	printf("(2)Enter X, Y: ");
 	scanf("%d %d", &x, &y);
 	func(&head, x, y);
-
+	return 0;
 }
 
 void insert(node** head, int data) {
