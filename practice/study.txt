@@ -352,3 +352,8 @@ rear 한 칸 앞이 front인 것
 rear = front
 
 연결리스트의 head를 엥간한 상황에선 바꿔선 안 된다 
+
+
+1. base case: root == NULL → 0 반환
+2. 왼쪽/오른쪽 재귀 호출
+3. 결과 합산

@@ -8,8 +8,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": true,
-      "cwd": "c:/coding/C_/0406LinkedList",
-      "program": "c:/coding/C_/0406LinkedList/build/Debug/outDebug",
+      "cwd": "c:/coding/C_/0427TreeCH5",
+      "program": "c:/coding/C_/0427TreeCH5/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [
