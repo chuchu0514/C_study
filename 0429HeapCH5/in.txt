@@ -1,0 +1,13 @@
+12 
+Kim 1 10 
+Lee 2 15 
+Kang 3 8 
+Choi 4 1 
+Song 5 17 
+Min 6 12 
+Ryu 7 6 
+Han 8 8 
+Kho 9 19 
+Oh 10 0 
+Noh 11 3 
+Ra 12 2 
