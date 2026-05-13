@@ -7,7 +7,7 @@ typedef struct edge {
     int cost;
 } edge;
 
-int parent[8]; 
+int *parent;
 
 int find(int i) {
     if (parent[i] < 0) return i; //-1이면 본인이 루트 
@@ -25,6 +25,10 @@ int main() {
     int **matrix = (int **)malloc(sizeof(int *)*n);//동적할당
     for (int i = 0; i < n; i++)
         matrix[i] = (int *)malloc(sizeof(int)*n);
+
+    parent = (int *)malloc(sizeof(int) * n);
+    for (int i = 0; i < n; i++)//부모배열 초기화 
+        parent[i] = -1;    
 
     for (int i = 0; i < n; i++)
         for (int j = 0; j < n; j++)
@@ -50,9 +54,6 @@ int main() {
             }
 
 
-    for (int i = 0; i < n; i++)//부모배열 초기화 
-        parent[i] = -1;
-    
     int count = 0;
 
     for (int i = 0; i < ecount; i++) {//Kruskal
