@@ -1,0 +1,11 @@
+10
+Kim 5
+Lee 3
+Park 5
+Choi 4
+Han 5
+Jung 2
+Kang 3
+Yoon 4
+Ahn 5
+Song 3
