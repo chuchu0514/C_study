@@ -1,0 +1,32 @@
+30
+Alice 85
+Bob 90
+Charlie 77
+David 92
+Eve 68
+Frank 74
+Grace 81
+Heidi 95
+Ivan 88
+Judy 79
+Ken 83
+Leo 91
+Mona 87
+Nina 82
+Oscar 76
+Paul 93
+Quinn 84
+Rita 89
+Steve 72
+Trudy 80
+Uma 78
+Victor 86
+Wendy 94
+Xavier 70
+Yvonne 75
+Zack 69
+Brian 96
+Clara 73
+Derek 97
+Erin 71
+
