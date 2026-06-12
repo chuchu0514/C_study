@@ -35,7 +35,7 @@ element deleteMinHeap() {
             child++;
         if (last.data <= heap[child].data) break;
         heap[i] = heap[child];
-        i = child;
+        i = child; 
     }
     heap[i] = last;
     return min;

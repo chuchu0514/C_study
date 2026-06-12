@@ -30,7 +30,7 @@ int main(){
     print_inorder(root);
     printf("\n\n");
 
-        do{
+    do{
         printf("input number: ");
         scanf("%d", &num);
         if(num >= 0){
