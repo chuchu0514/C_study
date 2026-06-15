@@ -1,13 +1,9 @@
-# 자료구조 기말 정리 — Ch8. Hashing (해싱)
-
-> 🔥 = 시험 단골 / ⚠️ = 100점 방지용 지엽·함정 포인트
-> 📌 = PPT에 텍스트로 없고 내가 트레이싱·추론한 부분 (직접 검산 권장)
-
----
-
 ## 0. 큰 그림 — 왜 해싱인가?
 
 **핵심 한 줄:** BST는 "비교해서 찾기" → 좋아야 O(log n). 해싱은 "계산해서 바로 위치 알기" → 평균 **O(1)**.
+배열 순차 검색 → O(n)
+이진 검색 → O(log n)
+BST → O(log n) 평균 가장 worst은 O(n)
 
 비유: 도서관에서 책 찾기.
 - **BST/탐색** = 서가를 따라 "이거보다 큰가 작은가" 비교하며 내려감.
@@ -20,29 +16,40 @@
 그리고 테이블이 꽉 차오를 때 통째로 다시 만들기 아까우니까 점진적으로 늘리는 게:
 3. **Dynamic Hashing (동적 해싱)** ← 🔥 우리 교수님 이론 단골
 
-전체 흐름:
-```
-key  --[hash function]-->  bucket 주소  --[꽉 찼으면 overflow 처리]-->  최종 저장 위치
-                                              테이블 포화 시 --> dynamic hashing으로 확장
-```
+hash table = b개의 bucket × s개의 slot
 
----
+ht[0]  [ slot0 | slot1 | ... | slot(s-1) ]
+ht[1]  [ slot0 | slot1 | ... | slot(s-1) ]
+...
+ht[b-1][ slot0 | slot1 | ... | slot(s-1) ]
 
 ## 1. 용어·기본 구조
 
 | 용어 | 의미 |
 |---|---|
-| **bucket** | 해시 테이블의 한 칸 (ht[0]…ht[b-1]), 총 **b**개 |
-| **slot** | 한 bucket 안에 record 저장 공간, bucket당 **s**개 |
-| **hash function h(x)** | key x → 0 ~ b-1 사이 정수(주소)로 매핑 |
+| **bucket** | 해시 테이블의 한 칸 (ht[0]…ht[b-1]), 총 **b**개 | hash table의 한 행 (주소 하나)
+| **slot** | 한 bucket 안에 record 저장 공간, bucket당 **s**개 | bucket 안의 저장 공간 (1개 = 1 record)
+| **hash function h(x)** | key x → 0 ~ b-1 사이 정수(주소)로 매핑 | key x → bucket 주소 (0 ~ b-1) 로 변환하는 함수
 | **synonym** | h(k1)=h(k2)인 서로 다른 두 key (같은 주소로 감) |
 | **collision (충돌)** | 새 pair 넣을 bucket이 이미 비어있지 않음 |
 | **overflow (오버플로)** | 꽉 찬(full) bucket에 새 identifier를 넣으려 함 |
+
+Collision(충돌): 서로 다른 두 키가 같은 버킷으로 해싱되는 것.
+→ h(k1) == h(k2). "같은 호수로 배정받았다."Overflow(오버플로): 키를 넣으려는데 그 버킷에 빈 슬롯이 없는 것.
+
+Overflow(오버플로): 키를 넣으려는데 그 버킷에 빈 슬롯이 없는 것.
+→ "호수에 도착했는데 침대가 다 찼다."
 
 ⚠️ **collision vs overflow 함정:** 둘은 다르다. 그런데 **slot이 1개(s=1)면 collision과 overflow가 동시에 발생**한다. (slot이 여러 개면 충돌해도 빈 slot 있으면 overflow는 아직 아님)
 
 **밀도 공식** 🔥
 - **key density** = n / T  (n=테이블 내 identifier 수, T=가능한 전체 key 수)
+26 × 26 = 676가지 → 이게 T (가능한 전체 key)
+그런데 우리 주차장에 등록된 차가 50대뿐이면:
+
+n = 50
+
+
 - **loading factor(loading density)** = **α = n / (s·b)**
 
 ⚠️ loading factor 분모는 **s·b** (전체 slot 수). b만 쓰면 틀림.
@@ -118,11 +125,18 @@ PPT p21 빈칸: "identifier들은 **cluster(군집/덩어리)**를 형성하게 
 - **평균 비교 횟수 = 1 + α/2** ⚠️ (α = identifier 수 / head node 수)
 - **최악 비교 횟수 = O(n)** (다 한 리스트로 몰린 경우)
 
-⚠️ **probing의 α는 n/(sb)** 인데 **chaining의 α는 ids/head nodes(=ids/b)** 로 정의가 다름. 공식 1+α/2 의 α를 헷갈리면 함정.
+실패한 search: 체인 끝까지 다 봐야 없다고 확신 → 평균 α개 비교 → O(1+α)
+성공한 search: 평균적으로 체인의 절반쯤에서 찾음 → 평균 1 + α/2 → 역시 O(1+α)
+
+그렇지만 
+⚠️ **probing의 α는 n/(s*b)** 인데 **chaining의 α는 ids/head nodes(=ids/b)** 로 정의가 다름. 공식 1+α/2 의 α를 헷갈리면 함정.
+ids=n임 
 
 ---
 
 ## 4. Dynamic Hashing (동적 해싱) 🔥🔥 — 이론 최다 출제
+중요 페이지 카파시티 넘지않으면 페이지를 split하지않음 하지만 한 번 split하면 똑바른 곳으로 찾아가야함 !!!!!!!!!!!!
+
 
 ### 왜?
 loading density가 임계치를 넘으면 테이블을 키워야 함. 그런데 **b → 2b+1로 D 바꿔서 전부 재해싱(rebuild)은 비쌈**. → **dynamic hashing으로 rebuild 시간 감소**(필요한 부분만 쪼갬).
@@ -141,6 +155,7 @@ loading density가 임계치를 넘으면 테이블을 키워야 함. 그런데 
 - **h(k, d) → directory 크기 = 2^d**
   - h(k,2) → directory 크기 2² = 4
   - h(k,5) → directory 크기 2⁵ = 32
+d=2 → 비트 2개 사용 → 디렉터리 주소가 2²=4개 (00, 01, 10, 11)
 
 ### overflow splitting 동작 (PPT p35 핵심)
 페이지 overflow 발생 시:

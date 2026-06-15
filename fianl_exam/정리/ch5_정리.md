@@ -1,10 +1,3 @@
-# 자료구조 Ch5: Trees — 기말 정리본
-
-> 전체 조망 + 변별력(100점 방지) 지엽 포인트 표시
-> 🔥 = 시험에 잘 나오는 핵심 / ⚠️ = 100점 방지용 지엽/함정 포인트
-
----
-
 ## 0. 큰 그림 (왜 트리인가)
 
 리스트·스택·큐는 **선형(linear)** 구조 — 데이터가 한 줄로 늘어선다.
@@ -25,7 +18,7 @@ Ch5의 흐름:
 2. 나머지 노드들은 n ≥ 0 개의 **서로소(disjoint)** 부분집합 T₁, T₂, …, Tₙ으로 분할되며, 각각이 또 트리다 (= 루트의 subtree).
 
 ### 핵심 용어
-| 용어 | 의미 |
+| 용어                 | 의미 |
 |------|------|
 | **degree of a node** | 그 노드의 subtree 개수 (자식 수) |
 | **degree of a tree** | 트리 안 노드들의 degree 중 **최댓값** |
@@ -64,7 +57,6 @@ Ch5의 흐름:
 
 **Lemma 5.3 [n₀ = n₂ + 1]** 🔥🔥 (가장 자주 나옴)
 공집합 아닌 이진트리에서 leaf 수 n₀, degree 2인 노드 수 n₂일 때:
-$$n_0 = n_2 + 1$$
 
 > **증명 핵심 (이걸 물어볼 수 있음 ⚠️):**
 > - 전체 노드 수: n = n₀ + n₁ + n₂
@@ -81,6 +73,11 @@ $$n_0 = n_2 + 1$$
 
 🔥 핵심: **Full ⊂ Complete** (full은 complete의 특수 케이스).
 ⚠️ 함정: "마지막 레벨이 오른쪽부터 차 있으면?" → complete **아님** (반드시 왼쪽부터).
+
+Full Binary TreeFull Binary Tree
+→ 모든 레벨이 꽉 찬 트리. 노드 수가 정확히 2^k - 1개.
+Complete Binary Tree
+→ 마지막 레벨 빼고 다 꽉 차있고, 마지막 레벨은 왼쪽부터 채워진 트리.
 
 ---
 
@@ -125,8 +122,8 @@ typedef struct node {
 
 PPT 예제 트리 결과 (외워두면 검산용):
 - inorder: **H D I B E A F C G**
-- preorder: A B D H I E C F G
-- postorder: H I D E B F G C A
+- preorder: A B D H I E C F G 25 20 10 5 1 8 12 15 22 36 30 28 40 38 48 45 50
+- postorder: H I D E B F G C A 1 8 5 15 12 10 22 20 28 30 38 45 50 48 40 36 25
 
 ### Iterative Inorder (스택 사용) ⚠️ 변별력
 재귀 대신 **명시적 스택**으로 inorder 구현:
@@ -136,6 +133,63 @@ PPT 예제 트리 결과 (외워두면 검산용):
 3. 그 노드의 오른쪽 자식으로 이동, 1번 반복
 4. 스택 비고 현재 노드도 NULL이면 종료
 ```
+void iterInorder(treePointer node) {
+    int top = -1; /* initialize stack */
+    treePointer stack[MAX_STACK_SIZE];
+    while(1) {
+        for (; node; node = node->leftChild)
+            stack[++top] = node;          /* push(node) */
+        if (top == -1) break;             /* node = pop(); if(!node) break; */
+        node = stack[top--];              /* pop */
+        printf("%d ", node->data);
+        node = node->rightChild;
+    }
+}
+//ppt
+void iterInorder(treePointer node) {//위랑 동치 NULL은 아예 push하지도 않음 
+    int top = -1; /* initialize stack */
+    treePointer stack[MAX_STACK_SIZE];
+    for(;;) {
+        for (; node; node = node->leftChild)
+            push(node);
+        node = pop();
+        if (!node) break; 
+        printf("%d ", node->data);
+        node = node->rightChild;
+    }
+}
+
+void levelOrder(treePointer ptr)
+{/* level order tree traversal */
+    int front = rear = 0;
+    treePointer queue[MAX_QUEUE_SIZE];
+    if (!ptr) return; /* empty tree */
+    addq(ptr);
+    for (;;) {
+        ptr = deleteq();
+        if (ptr) {
+            printf("%d", ptr->data);
+            if (ptr->leftChild)
+                addq(ptr->leftChild);
+            if (ptr->rightChild)
+                addq(ptr->rightChild);
+        }
+        else break;
+    }
+}
+
+treePointer copy(treePointer original)
+    treePointer temp;
+    if (original) {
+        MALLOC(temp, sizeof(*temp));
+        temp->leftChild = copy(original->leftChild);
+        temp->rightChild = copy(original->rightChild);
+        temp->data = original->data;
+        return temp;
+    }
+    return NULL;
+
+
 
 ---
 
@@ -144,10 +198,14 @@ PPT 예제 트리 결과 (외워두면 검산용):
 ### 왜?
 이진트리 link 2n개 중 **n+1개가 NULL로 낭비**됨. 이 NULL을 순회에 쓰자!
 
+더미헤드 존재
+처음 node와 마지막 node가 가리킬 것이 필요하기 때문..
+
 ### 규칙
 - `ptr->leftChild`가 NULL이면 → **inorder predecessor**를 가리키게 (왼쪽 thread)
 - `ptr->rightChild`가 NULL이면 → **inorder successor**를 가리키게 (오른쪽 thread)
-
+진짜 자식이면 F 아니면 T
+그러니까 thread가 0이면 진짜자식 1이면 가짜자식(실로 연결되어있다 실이 on이냐로 생각)
 ### 노드 구조 (⚠️ thread 플래그 필수)
 ```c
 typedef struct threadedTree *threadedPointer;
@@ -163,11 +221,20 @@ typedef struct threadedTree {
 
 ### insucc (inorder successor 찾기) — ⚠️ 알고리즘 빈칸 단골
 ```c
+//초중요 진짜 자식이 있을때 즉 s가 0일때 false일때는 child는 진짜 자식을 가리킴 그게 아닐땐 child는 다음 순서를 가리킴(프로그래머가 미리 inorder방향으로 세팅해놓음 중요)
 threadedPointer insucc(threadedPointer tree) {
     threadedPointer temp = tree->rightChild;
-    if (!tree->rightThread)            // 오른쪽이 thread가 아니면(=진짜 자식 있으면)
+    if (!tree->rightThread)            // 오른쪽이 thread가 아니면(=진짜 자식 있으면) tree temp구분 잘해라 !!!!!! child아니고 thread 이것도구분 ㄱㄱ 
         while (!temp->leftThread)      // 그 오른쪽 서브트리의 가장 왼쪽으로
             temp = temp->leftChild;
+    return temp;
+}
+
+threadedPointer prede(threadedPointer tree) {만약 이전을 구한다면..
+    threadedPointer temp = tree->leftChild;
+    if (!tree->leftThread)            // 오른쪽이 thread가 아니면(=진짜 자식 있으면)
+        while (!temp->rightThread)      // 그 오른쪽 서브트리의 가장 왼쪽으로
+            temp = temp->rightChild;
     return temp;
 }
 ```
@@ -180,10 +247,16 @@ threadedPointer insucc(threadedPointer tree) {
 ---
 
 ## 6. 우선순위 큐 & 힙 (Priority Queue & Heap) 🔥🔥
+63p한번은보기 
 
 ### 우선순위 큐
 일반 큐 = FIFO. 우선순위 큐 = **우선순위 높은 게 먼저** 나감 (OS 작업 스케줄링 등).
 보통 **힙**으로 구현.
+
+부모(i) = i/2
+왼쪽 자식 = 2i
+오른쪽 자식 = 2i+1
+index 1부터 시작 (0은 안 씀)
 
 ### Max/Min 정의 — ⚠️ 헷갈림 주의
 | | Max Tree / Max Heap | Min Tree / Min Heap |
@@ -206,7 +279,7 @@ heap[i] = item;
 ```
 > 예) 21 삽입, n=5→6: 21 > heap[3]이면 heap[6]=heap[3], i=3 → 21>heap[1]이면 heap[3]=heap[1], i=1 → heap[1]=21.
 
-### Delete — O(log₂ n)
+### Delete — O(log₂ n) Heap에서 삭제는 항상 root(최댓값/최솟값)
 **루트(최댓값/최솟값)를 제거** → 마지막 원소를 루트로 올림 → 자식과 비교하며 내림(down-heap, heapify).
 
 ⚠️ 함정: 힙에서 삭제는 항상 **루트만** (max heap이면 최댓값). 임의 위치 삭제 아님.
@@ -214,10 +287,39 @@ heap[i] = item;
 
 depth = ⌈log₂(n+1)⌉ 이므로 두 연산 모두 O(log n).
 
+item = heap[1];          // root(최댓값) 저장
+temp = heap[(*n)--];     // 마지막 노드 꺼내고 n 감소
+parent = 1; child = 2;
+while (child <= *n) {
+    // 두 자식 중 큰 쪽 선택
+    if (child < *n && heap[child].key < heap[child+1].key)
+        child++;
+    if (temp.key >= heap[child].key) break;  // 자리 확정
+    heap[parent] = heap[child];  // 자식을 위로 올림
+    parent = child;
+    child *= 2;
+}
+heap[parent] = temp;
+return item;
+
+
+maxheap//부모가 자식보다 커야함 
+아래에서 위로 올라가며 각 노드를 제자리로 내려보내기"
+"어떤 노드 i가 자식을 가지려면?"
+왼쪽 자식 인덱스 = 2*i
+2*i <= heapSize 이어야 자식 존재!
+heapSize/2     → 자식 있음 (내부 노드)
+heapSize/2 + 1 → 자식 없음 (leaf)
+
+자식이 2i 2i+1인 이유는 앞 노드 수가 자식을 가져간 수 이기 때문
+예를들어 1 2 3 4 5가 있으면 1은 23이란 자식을 2는 45란자식을 3은 이제 6번쨰 자식을 가지기때문(1은 루트니까 제외)
+만약 0부터 시작하면 2i + 1, 2i +2가 되겠지
+
+
 ---
 
 ## 7. 이진 탐색 트리 (BST) 🔥🔥
-
+값중복x
 ### 정의
 모든 노드에 대해: **왼쪽 서브트리 < 노드 < 오른쪽 서브트리** (중복 없음).
 🔥 inorder 순회하면 **오름차순 정렬** 출력.
@@ -230,8 +332,33 @@ depth = ⌈log₂(n+1)⌉ 이므로 두 연산 모두 O(log n).
   - 자식 1개 → 자식이 자리 대체
   - 자식 2개 → **왼쪽 서브트리의 최댓값** 또는 **오른쪽 서브트리의 최솟값**으로 대체
 
+Search: 재귀로 왼쪽/오른쪽 내려가며 찾기. O(h)  worst case: O(n)
+
+element* search(treePointer root, int key) {
+    if (!root) return NULL;                          // 없으면 NULL
+    if (key == root->data.key) return &(root->data); // 찾음
+    if (key < root->data.key)
+        return search(root->leftChild, key);          // 왼쪽으로
+    return search(root->rightChild, key);             // 오른쪽으로
+}
+
+Insert: Search 먼저 → 못 찾은 자리에 새 노드 삽입. O(h) //why? 키 중복 안 되니까 먼저 있는지 찾는 거임 
+
+// 1. modifiedSearch로 삽입 위치(temp) 찾기
+// 2. 새 노드 만들고
+// 3. k < temp->data.key 면 왼쪽, 아니면 오른쪽에 연결
+if (k < temp->data.key) temp->leftChild = ptr;
+else temp->rightChild = ptr;
+
+
+Delete: 3가지 케이스
+
+leaf 노드 → 그냥 삭제
+자식 1개 → 그 자식으로 대체
+자식 2개 → left subtree의 최댓값 또는 right subtree의 최솟값으로 대체
+
 ### Height — ⚠️🔥 변별력 단골
-| 경우 | height |
+| 경우 | height | n이 커질때 높이가 어떤 속도로 자라나는가 
 |------|--------|
 | 평균 | **O(log₂ n)** |
 | 최악 (정렬된 순서로 삽입) | **O(n)** — skewed tree! |
@@ -244,7 +371,6 @@ depth = ⌈log₂(n+1)⌉ 이므로 두 연산 모두 O(log n).
 ---
 
 ## 8. 선택 트리 (Selection Trees) ⚠️ (덜 다룸 / 지엽 가능성)
-
 ### 문제
 k개의 정렬된 run(시퀀스)을 하나로 merge할 때, 매번 최솟값을 직접 비교하면 k−1번 비교 필요 → 비효율.
 
@@ -254,7 +380,7 @@ k개의 정렬된 run(시퀀스)을 하나로 merge할 때, 매번 최솟값을 
 - 한 record 출력 후 재구축: 해당 leaf에서 루트까지 path만 갱신 → **O(log₂ k)**.
 
 ### 복잡도
-- 초기 setup: O(k)
+- 초기 setup: O(k)   (k는 run 수)
 - tree level: log₂k + 1
 - 재구축: O(log₂ k)
 - n개 record 전체 merge: **O(n log₂ k)** 🔥
@@ -262,9 +388,26 @@ k개의 정렬된 run(시퀀스)을 하나로 merge할 때, 매번 최솟값을 
 ⚠️ leaf 수 = k(run 수), non-leaf(inner) 수 = 2^(h-1) − 1 (height h일 때).
 ⚠️ Loser tree도 있음: 각 노드가 진 쪽(loser)을 저장 → 재구축 시 비교 횟수 절감.
 
+
+k개 run이 있으면 leaf가 k개야.
+처음에 트리 만들 때 leaf k개를 가지고 위로 올라가면서 비교해야 해.
+비교 횟수 = 내부 노드 수 = k-1개
+k-1 = O(k)
+쉽게 생각
+리프는 2 k승 개인데 그 전 노드 개수의 합은 2 k승 -1개니까 
+leaf가 k개면 내부 노드 수는 k-1개
+
+
+treeroot가 최솟값", "재구축 O(log k)", "전체 merge O(n log k)  -> 재구축을 n번 반복하니까.. 
+
+
+
 ---
 
 ## 9. 서로소 집합 / Union-Find 🔥
+
+parent[i] < 0 → i가 root (음수 = 해당 집합 노드 수)
+parent[i] >= 0 → i의 부모가 parent[i]
 
 ### 개념
 원소 0~n-1을 겹치지 않는 집합들로 관리. 트리로 표현 (root = 집합 이름).
@@ -281,10 +424,21 @@ int simpleFind(int i) { while (parent[i] >= 0) i = parent[i]; return i; }
 
 ### Weighted Union (가중치 규칙) 🔥 — ⚠️ 변별력
 ```
-count(i) = 트리 i의 노드 수
+count(i) = 트리 i의 노드 수  
+ex parent[0] = -3 자기포함 노드3개
 if count(i) < count(j) then j를 부모로  (작은 트리를 큰 트리 밑에)
 else i를 부모로                         (같으면 i가 부모)
 ```
+void weightedUnion(int i, int j) {
+    int temp = parent[i] + parent[j]; // 둘 다 음수라 합치면 더 큰 음수
+    if (parent[i] > parent[j]) {  // i가 노드 수 적으면
+        parent[i] = j;            // i를 j 밑에
+        parent[j] = temp;
+    } else {                      // j가 노드 수 적으면
+        parent[j] = i;            // j를 i 밑에
+        parent[i] = temp;
+    }
+}
 🔥 **노드 수가 많은 트리가 부모**가 됨. (같으면 i)
 🔥 **Lemma**: weightedUnion으로 만든 n노드 트리의 height ≤ **⌊log₂ n⌋ + 1**.
 
@@ -293,8 +447,19 @@ else i를 부모로                         (같으면 i가 부모)
 
 ### Collapsing Find 🔥🔥 — ⚠️ 이론 시험 타깃 (메모 기록)
 규칙: **j가 i에서 root까지 path 상의 노드면, j를 직접 root의 자식으로 만든다** (경로 압축).
+find하면서 경로상 모든 노드를 root 직접 자식으로 만들어버림 → 다음 find가 O(1)에 가까워짐.
+
+아이디어:
+Find 한 번 할 때 경로상 모든 노드를 root 직접 자식으로 만들어버려.
+collapsingFind(12) 실행 후:
+전: 8 ← 5 ← 7 ← 12
+후: 8 ← 5
+    8 ← 7
+    8 ← 12
+이제 다음에 Find(12), Find(7), Find(5) 하면 한 번만 이동하면 돼.
 
 ```c
+i는 찾고자하는 것 
 int collapsingFind(int i) {
     int root, trail, lead;
     for (root = i; parent[root] >= 0; root = parent[root]);  // 1) root 찾기
@@ -310,6 +475,10 @@ int collapsingFind(int i) {
 
 ⚠️ 빈칸 포인트: `parent[root] >= 0` (root 판별), `trail != root` (루프 종료), `parent[trail] = root` (압축).
 
+
+0513을보면
+find와 union의 쓰임새가 나옴 이게 싸이클인지 아닌지 알 수 있다! 
+만약 부모가 같다면 싸이클이겠지 
 ---
 
 ## 10. 시험 직전 체크리스트
@@ -335,3 +504,6 @@ int collapsingFind(int i) {
 > 중간고사 때 스택 안/밖 우선순위(isp/icp) 같은 "정의·세부 규칙" 한 문제로 변별했듯,
 > ch5에서도 **정의의 미묘한 차이**(full/complete, tree/binary, thread 플래그)나
 > **부등식/공식의 경계조건**이 그 한 문제가 될 가능성이 높음.
+
+추가노트
+collapsing find(G)로 G를 A의 자식으로 만든다는 건, 이 sibling 체인 끝에 G를 잇는 것이 자연스러움 but 순서는 사실 의미없음 
